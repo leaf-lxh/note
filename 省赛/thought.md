@@ -34,9 +34,11 @@ ___
 - [ ] web访问分析（包括其他队伍访问的url,文件上传目录的实时监控与抄袭）  
 - [ ] 缺陷服务的自动化扫描（ssh弱口令登录  
 - [ ] base全家桶，AES，DES，哈希函数全家桶使用脚本  
+- [x] 敏感函数扫描脚本 /workspace/code/python/scan_tool/main.py  
 # 权限维持  
 
 - [ ] C++ , nc, perl 反弹shell  
 - [ ] 隐藏进程  
 
 # 思路  
+
