@@ -1,20 +1,20 @@
 # 知识储备  
 ## 基础  
 - [ ] PHP易产生漏洞的函数，易产生漏洞的php.ini配置项  
-- [ ] 对于SQL注入，PHP的一些字符过滤函数，以及参数化查询的写法  （sqllib）
-- [ ] 对于XSS，CSRF，PHP的实体转义函数htmlspecialchars()使用  （自搭环境）
-- [ ] 文件包含，PHP伪协议  （自搭环境）
-- [ ] 文件上传，后缀名绕过，MIME类型绕过  （uploadlib）
+- [ ] 对于SQL注入，PHP的一些字符过滤函数，以及参数化查询的写法  （sqllib）  
+- [ ] 对于XSS，CSRF，PHP的实体转义函数htmlspecialchars()使用  （自搭环境）  
+- [ ] 文件包含，PHP伪协议  （自搭环境）  
+- [ ] 文件上传，后缀名绕过，MIME类型绕过  （uploadlib）  
 
-## 一阶段
-- [ ] 日志系统，WAF的配置
+## 一阶段  
+- [ ] 日志系统，WAF的配置  
 
 ## 二阶段
-- [ ] 利用python scapy库发包    
+- [ ] 利用python scapy库发包      
 - [ ] 生成树协议、ARP协议、DHCP协议、路由协议、TCP协议的安全隐患，利用方式，修补或限制的方式。  （交换机上的配置） 
 - [ ] jpg，png，gif图片隐写  
 - [ ] 古典密码  
-- [ ] flask模板漏洞
+- [ ] flask模板漏洞  
 
 ## 三阶段  
 - [ ] PHP高危函数禁用，以及利用反射函数进行绕过
