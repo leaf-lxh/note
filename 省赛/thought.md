@@ -3,7 +3,7 @@
 - [x] PHP易产生漏洞的函数，易产生漏洞的php.ini配置项  
 - [ ] 对于SQL注入，PHP的一些字符过滤函数，以及参数化查询的写法  （sqllib）  
 - [ ] 对于XSS，CSRF，PHP的实体转义函数htmlspecialchars()使用  （自搭环境）  
-- [ ] 文件包含，PHP伪协议  （自搭环境）  
+- [x] 文件包含，PHP伪协议  （自搭环境）  
 - [ ] 文件上传，后缀名绕过，MIME类型绕过  （uploadlib）  
 
 ## 一阶段   

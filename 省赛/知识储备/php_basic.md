@@ -2,7 +2,7 @@
 19-03-01
 
 ## 目录  
-正在建设中
+正在建设中, 目前内容比较粗略，比赛后可能会做补充
 ___
 ## 命令执行函数
 
@@ -139,7 +139,7 @@ allow_url_fopen = Off
 allow_url_include = Off   
 **禁止读取网站目录外的东西**  
 配置base_dir，只允许读取指定目录下的文件  
-![](imgs/php_ini_basedir.png)
+![](imgs/php_ini_basedir.png)  
 **不要让include的文件名称被访问者控制**
 ___
 ## 序列化与反序列化利用，以及一些可覆盖变量的函数  
@@ -208,7 +208,7 @@ phar是一种归档文件，由php的函数生成。
 举个栗子
 ```php
 /*--------------------------------------------网站脚本--------------------------------------------*/
-//需结合文件上传食用，把攻击用的phar文件上传到服务器上
+//需想办法把phar文件弄到对方服务器上，需结合文件上传之类的漏洞
 <?php
 
 class web_content
@@ -238,7 +238,7 @@ class web_content
 if(array_key_exists("file",$_GET))
 {
     
-    if(stristr($_GET['file'],"http") || stristr($_GET['file'],"flag")|| stristr($_GET['file'],"ftp")|| stristr($_GET['file'],"file")|| stristr($_GET['file'],".."))
+    if(stristr($_GET['file'],"http") || stristr($_GET['file'],"flag")|| stristr($_GET['file'],"ftp")|| stristr($_GET['file'],"file")|| stristr($_GET['file'],"..")|| stristr($_GET['file'],"data"))
     {
         echo "hacker!";
         exit();
@@ -301,12 +301,36 @@ class web_content
 利用phar反序列化覆盖file变量  
 ![](imgs/phar_unserialize.png)
 
-### 可能导致变量覆盖的函数
+#### 可能导致变量覆盖的函数
 名称 | 参数 | 备注 |
  :- | :- | :-
-  
+extract | (数组[, flag]) | 根据数组的对应关系，定义并初始化变量。其变量名为数组键名称，变量值为数组键值。如果出现数组中的键名与现存变量名有冲突，是否覆盖根据flag值决定。默认值EXTR_OVERWRITE为无条件覆盖，EXTR_SKIP为不覆盖。更多的标志值暂不在这列出
+parse_str | (字符串 [， 数组]) | 解析字符串，将变量赋值给参数二的数组中，如果没有指定参数二，则会直接定义相应的变量
+举几个栗子
+```php
+<?php
+//extract函数使用不当
+$file = "fake.txt";
+echo $file."<br>"; // >> fake.txt<br>
+
+$list = array("file" => "flag.txt");
+extract($list);
+echo $file."<br>"; // >> flag.txt<br>
+
+//parse_str函数使用不当
+$str = "file=password.txt";
+parse_str($str);
+echo $file; // >> password.txt
+
+?>
+```
+#### 封堵办法
+**不要让访问者控制序列化、函数的值**  
+非要使用的话请做好数据过滤
 ___
 ## SQL注入
+
+mysql_real_escape_string只能防字符型型注入
 ___
 ## 函数禁用
 通过配置disable_function来禁止某些函数的使用，eval无法通过此方式禁止，因为不是函数，需要使用php扩展suhosin
