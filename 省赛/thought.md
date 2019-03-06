@@ -22,7 +22,7 @@
 - [ ] MySQL，SQLserver账户密码修改，监听端口修改  
 - [ ] webshell，内存马查找  
 - [ ] PAM模块配置  
-- [ ] 权限维持  
+- [x] 权限维持  
 - [ ] kali工具（爆破zip文件，爆破系统账号口令，searchsploit提权exp）  
 - [ ] iptables封堵端口  
 - [ ] pwn
@@ -30,7 +30,6 @@
 ___  
 # Python脚本准备  
 - [x] 自写arpspoof，分别利用Python的scapy库和rawsocket实现  
-- [ ] 其他协议攻击脚本**待续**  
 - [x] 自动修改系统账户密码脚本  
 - [ ] web访问分析（包括其他队伍访问的url,文件上传目录的实时监控与抄袭）  
 - [ ] 缺陷服务的自动化扫描（ssh弱口令登录  
