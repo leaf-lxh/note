@@ -117,9 +117,28 @@ iptables -I OUTPUT -p TCP --source-port 6200 -s 0.0.0.0/0 -j DROP
 
 配置文件：/etc/samba/smb.comf
 
+利用：
+
+**枚举用户**
+
+![](imgs/smb_enumusers.png)
+
+**枚举共享**
+
+![](imgs/smb_enumshares.png)
+
+**目录穿越**
+
+![](imgs/smb_symlink_traversal.png)
+
 加固：修改配置文件
 
 ```conf
+[global]
+	security = user
+	restrict anonymous = 2 #禁用匿名用户，防止信息泄露
+	
+其他的一些可选配置
 [共享名称]
 	guest ok = yes/no #是否允许匿名账户访问本共享
 	security = user/share #基于samba账号验证还是不需要账号验证
@@ -127,6 +146,11 @@ iptables -I OUTPUT -p TCP --source-port 6200 -s 0.0.0.0/0 -j DROP
 	read only = yes/no #是否只读
 	writable = yes/no #是否可写
 	public = yes/no #是否公开此共享
+	hosts allow = 10.0.0. 127.0.0.1 #允许连接的客户端ip
+	hosts deny = 0.0.0.0/0 #不允许连接的客户端IP
+	
+重启服务
+/etc/init.d/samba restart
 ```
 
 
@@ -266,6 +290,21 @@ Export list for 192.168.247.250:
 # /etc/init.d/nfs-kernel-server restart
 ```
 
+### Java RMI Registry
+
+默认配置存在远程代码执行漏洞
+
+端口：1099
+
+利用：
+
+```
+msf5 > use exploit/multi/misc/java_rmi_server
+
+```
+
+
+
 ### ingreslock
 
 后门程序，提供远程root shell连接
@@ -322,6 +361,30 @@ msf5 exploit(unix/misc/distcc_exec) > exploit
 # iptables -I INPUT -p TCP --destination-port 3632 -j DROP
 ```
 
+### VNC
+
+提供远程桌面服务
+
+配置文件位置：~/.vnc/xstartup
+
+密码文件：~/.vnc/passwd
+
+mst2利用：
+
+```
+use auxiliary/scanner/vnc/vnc_login 
+
+$ vncviewer host
+```
+
+加固：
+
+```
+修改各用户的密码
+会提示是否设置一个只读界面的密码，选n
+#/$ vncpasswd
+```
+
 
 
 ### UnreaIRCD IRC
@@ -372,7 +435,37 @@ root
 
 ![](imgs/iptables_usage.png)
 
+```
+禁止meterpreter连接（原理是meterpreter默认监听端口是4444）
+换了LPORT就没用了...
+# iptables -I INPUT -p TCP --source-port 4444 -j DROP
+```
 
+
+
+### 进入单用户模式
+
+grab1
+
+```
+在kernel引导脚本的最后加入single, 按回车保存
+后续可能需要手动挂载根目录
+```
+
+grab2
+
+```
+查找以下配置
+linux /boot/vmlinuz-3.2.0-24-generic root=UUID=bc6f8146-1523-46a6-8b\
+6a-64b819ccf2b7 ro  quiet splash
+initrd /boot/initrd.img-3.2.0-24-generic
+
+在linux开头的一行，ro改为rw init=/bin/bash，如果有rhgb quite的话删除, 按ctrl+x进行引导
+
+重启：exec /sbin/init
+centos7在单用户模式修改密码后无法在图形界面处登录，原因未知....
+
+```
 
 
 

@@ -25,7 +25,7 @@
 - [x] 权限维持  
 - [ ] kali工具（爆破zip文件，爆破系统账号口令，searchsploit提权exp）  
 - [x] iptables封堵端口  
-- [ ] pwn
+- [x] pwn
 
 ___
 # Python脚本准备  
