@@ -109,6 +109,45 @@ iptables -I OUTPUT -p TCP --source-port 6200 -s 0.0.0.0/0 -j DROP
 | delete | 文件名                              | 删除文件                                                     |
 | ?      | 无                                  | 查看能使用的命令                                             |
 
+### Apache2
+
+提供web服务
+
+端口：TCP 80
+
+主配置文件：Debian: /etc/apache2/apache2.conf
+
+​			Red Hat: /etc/httpd/conf/httpd.conf
+
+加固：
+
+```
+禁止遍历目录,禁止文件执行，禁止重载配置
+<Directory 目录（不要有/结尾）>
+	AllowOverride None
+	Options -Indexes
+	<FilesMatch ".">
+		SetHandler None
+	</FilesMatch>
+</Directory>
+
+指定Access文件名称
+AccessFileName .htaccess
+
+设定错误文档
+ErrorDocument 404 /404.html  #文档位置的根目录是网站的根目录
+ErrorDocument 403 /404.html
+
+不在HTTP Response的Server字段中显示服务器信息
+ServerTokens Prod
+
+不在错误文档中显示服务器信息
+ServerSignature off
+
+```
+
+
+
 ###  samba
 
 提供跨平台文件共享服务
@@ -431,17 +470,62 @@ root
 
 
 
- ###  iptables使用
+### MySQL-server
 
-![](imgs/iptables_usage.png)
+提供数据库服务
+
+端口：3306
+
+加固：
 
 ```
-禁止meterpreter连接（原理是meterpreter默认监听端口是4444）
+查看数据库中已有的用户，以及能登录该账号的主机，密码
+MySQL [(none)]> select host,user,password from mysql.user;
++------+------------------+----------+
+| host | user             | password |
++------+------------------+----------+
+|      | debian-sys-maint |          |
+| %    | root             |          |
+| %    | guest            |          |
++------+------------------+----------+
+%表示模糊匹配，此处意思是允许任何主机登录该用户
+
+更新用户密码
+MySQL [(none)]> update mysql.user set password=PASSWORD("niconiconi_love_live"),host="127.0.0.1" ;
+Query OK, 3 rows affected (0.00 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+
+MySQL [(none)]> select host,user,password from mysql.user;
++-----------+------------------+-------------------------------------------+
+| host      | user             | password                                  |
++-----------+------------------+-------------------------------------------+
+| 127.0.0.1 | debian-sys-maint | *7E6FFA0D2E799C6E6333F0C24429F0F8E09CF304 |
+| 127.0.0.1 | root             | *7E6FFA0D2E799C6E6333F0C24429F0F8E09CF304 |
+| 127.0.0.1 | guest            | *7E6FFA0D2E799C6E6333F0C24429F0F8E09CF304 |
++-----------+------------------+-------------------------------------------+
+
+```
+
+远程连接：
+
+```
+$ mysql -h 主机 -u 用户名 [-p]
+-p选项可选，不加-p代表空密码登录。加-p代表使用密码登录，回车后输入密码
+```
+
+
+
+## Linux杂项
+
+### iptables使用
+
+![](/workspace/code/markdown/notes/%E7%9C%81%E8%B5%9B/%E7%9F%A5%E8%AF%86%E5%82%A8%E5%A4%87/imgs/iptables_usage.png)
+
+```
+禁止meterpreter连接（原理是meterpreter的reverse shell默认监听端口是4444）
 换了LPORT就没用了...
 # iptables -I INPUT -p TCP --source-port 4444 -j DROP
 ```
-
-
 
 ### 进入单用户模式
 
@@ -467,7 +551,97 @@ centos7在单用户模式修改密码后无法在图形界面处登录，原因�
 
 ```
 
+### PHP
 
+配置文件:/etc/php/php版本/apache2/php.ini
+
+加固：
+
+```
+禁止打开远程文件
+allow_url_fopen = Off  
+allow_url_include = Off 
+
+指定文件打开的根目录
+base_url = /var/www/html
+
+注意源代码里面的一些危险函数....
+```
+
+### 利用john爆破linux系统密码
+
+```
+john 参数 -w:字典 使用字典爆破，默认使用passwd.lst 
+		 -single 根据用户名进行测试 
+		 -increment:模式  增强模式，模式可以选ALL（0到8个字符长的所有字符组合）、Alpha（1到8个字符长的所有字母组合）、Digits（1到8个字符长的所有数字组合）、Alnum（1到8个字符长的所有字母/数字组合） 
+
+john -show 输出文件    查看破解出的密码 
+```
+
+```
+首先需要一份passwd文件以及与之匹配的shadow文件
+$ unshadow passwd shadow > userfile
+Created directory: /home/leaf/.john
+
+$ john -single userfile
+...
+user             (user)
+postgres         (postgres)
+msfadmin         (msfadmin)
+service          (service)
+...
+$ john -increment userfile
+...
+batman           (sys)
+hello            (ftponly)
+```
+
+
+
+### 密码字典
+
+```
+kali系统下的密码字典  
+/usr/share/wordlist/下 
+rockyou.txt.gz,解压使用gunzip命令 
+nmap.lst 
+
+back track5下的密码字典 
+find / -name wordlist 
+find / -name rockyou* 
+/pentest/password/wordlist/ 
+```
+
+### 破解加密的zip文件 
+
+```
+fcrackzip 参数  
+	-b 暴力枚举 
+	-D -p 字典路径 使用字典 
+	-u 使用unzip 
+	-c 指定使用的暴力破解字符 
+```
+
+
+
+### 密码复杂度设定
+
+/etc/login.defs
+
+```
+#PASS_MIN_LEN
+#PASS_MAX_LEN
+```
+
+/etc/pam.d/common-password
+
+```
+password required pam_cracklib.so retry=3 minlen=6 difok=3 
+其中 
+       retry=密码可以重输的次数 
+       minlen=密码最短的长度 
+       difok=允许新旧密码相同字符的个数，默认为10 
+```
 
 
 
