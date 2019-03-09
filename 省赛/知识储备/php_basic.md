@@ -343,6 +343,16 @@ disable_functions = pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexi
 
 ```
 禁用可能会误伤站点上用到这些函数的功能
+
+```
+禁用后可能会将错误的信息回显给客户端，可以通过在每个php文件前加上
+error_reporting(0);
+
+
+```
+
+
+
 ___
 
 ## 附一个文件上传栗子

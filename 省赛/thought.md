@@ -37,19 +37,34 @@ ___
 - [x] 敏感函数扫描脚本 /workspace/code/python/scan_tool/main.py  
 # 权限维持  
 
-- [ ] C++ , nc, perl 反弹shell  
-- [ ] 隐藏进程  
+- [x] C++ , nc 反弹shell  
+- [ ] perl 反弹shell  
+- [x] 隐藏进程  
 
 # 思路  
 
 Linux:
 
+备份网站，要改的配置文件先备份，改了什么记录下来
+
 修改系统账户、数据库弱口令
 
+iptables禁止源端口TCP4444连接，防止默认meterpreter reverse shell连接
+
+php禁用打开远程文件，禁用函数，设置文件打开根目录
+
 vsftpd 禁用anonymous账户登录，启用用户白名单
+
+samba restrict anonymous = 2禁用匿名登录，security = user基于用户登录
 
 sshd 禁用空密码登录、禁止root登录
 
 rlogind 禁止免密码登录
+
+vnc密码修改
+
+
+
+
 
 
