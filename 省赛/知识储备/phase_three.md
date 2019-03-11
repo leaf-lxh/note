@@ -10,20 +10,20 @@
 [Baidu](https://www.baidu.com)
 
 ## 目录
-* [Linux 服务](#Linux 服务)
+* [Linux 服务](#Linux-服务)
 	* [openssh-server](#openssh-server)
 	* [vsftpd](#vsftpd)
 	* [Apache2](#Apache2)
 	* [samba](#samba)
 	* [rexec rlogin rsh](#rexec-rlogin-rsh)
 	* [NFS(Network FIle System)](#nfsnetwork-file-system)
-	* [Java RMI Registry](#Java RMI Registry)
+	* [Java RMI Registry](#Java-RMI-Registry)
 	* [ingreslock](#ingreslock)
 	* [distccd](#distccd)
 	* [VNC](#VNC)
-	* [UnrealRCD IRC](#UnrealRCD IRC)
+	* [UnrealRCD IRC](#UnrealRCD-IRC)
 	* [MySQL-server](#MySQL-server)
-* [Linux 杂项](#Linux 杂项)
+* [Linux 杂项](#Linux-杂项)
 	* [iptables使用](#iptables使用)
 	* [进入单用户模式](#进入单用户模式)
 	* [PHP](#PHP)
@@ -541,7 +541,7 @@ $ mysql -h 主机 -u 用户名 [-p]
 
 
 
-## Linux杂项
+## Linux 杂项
 
 ### iptables使用
 
