@@ -1,10 +1,36 @@
 # 系统运维从修补到宕机
-3-6
+2019-03-06
 
-参考：https://metasploit.help.rapid7.com/docs/metasploitable-2-exploitability-guide
+参考：
+
+[metasploit table 2 guide](https://metasploit.help.rapid7.com/docs/metasploitable-2-exploitability-guide)
+
+[Google](https://www.google.com)
+
+[Baidu](https://www.baidu.com)
 
 ## 目录
-[TOC]
+* [Linux 服务](#Linux 服务)
+	* [openssh-server](#openssh-server)
+	* [vsftpd](#vsftpd)
+	* [Apache2](#Apache2)
+	* [samba](#samba)
+	* [rexec rlogin rsh](#rexec rlogin rsh)
+	* [NFS(Network FIle System)](#NFS(Network FIle System))
+	* [Java RMI Registry](#Java RMI Registry)
+	* [ingreslock](#ingreslock)
+	* [distccd](#distccd)
+	* [VNC](#VNC)
+	* [UnrealRCD IRC](#UnrealRCD IRC)
+	* [MySQL-server](#MySQL-server)
+* [Linux 杂项](#Linux 杂项)
+	* [iptables使用](#iptables使用)
+	* [进入单用户模式](#进入单用户模式)
+	* [PHP](#PHP)
+	* [利用john爆破linux系统密码](#利用john爆破linux系统密码)
+	* [密码字典](#密码字典)
+	* [破解加密的zip文件](#破解加密的zip文件)
+	* [密码复杂度设定](#密码复杂度设定)
 ___
 
 ## Linux 服务
