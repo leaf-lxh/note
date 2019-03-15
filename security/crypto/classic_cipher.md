@@ -3,6 +3,7 @@
 
 引用以及参考：  
 [https://ctf-wiki.github.io/ctf-wiki/crypto/classical/monoalphabetic/](https://ctf-wiki.github.io/ctf-wiki/crypto/classical/monoalphabetic/)  
+
 ___
 ## 目录
 * [单表代换加密](#1)
@@ -12,7 +13,7 @@ ___
     * [埃特巴什(Atbash)码](#1.4)
     * [仿射密码](#1.5)
 * [多表代换加密](#2)
-    
+  
 * [其他类型的加密算法](#3)
     * [培根密码](#2.1)
 
