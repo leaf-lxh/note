@@ -22,7 +22,7 @@ pyc文件是可以反编译的
 
 
 
-首先装个工具：
+首先装个pyc的反编译工具：
 
 ```
 $ sudo python -m pip install uncompyle6
@@ -41,7 +41,7 @@ $ uncompyle6  fuck.pyc >findkey.py
 
 ```
 
-![源代码](imgs/FindKey-sourcecode.PNG)
+![源代码](imgs/FindKey-sourcecode.png)
 
 运行：
 
