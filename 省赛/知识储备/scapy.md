@@ -41,7 +41,16 @@
 
 
 ## scapy库的使用  
+### 安装
+
+```
+$ sudo python -m pip install scapy
+```
+
+
+
 ### 命名空间设定：from scapy.all import *
+
 #### 发包  
 函数：  
 ![](imgs/scapy_send_func.png)
@@ -72,7 +81,7 @@ ARP(op=操作码, psrc=发送端IP地址字符串, hwsrc=发送端MAC地址字�
 
 #### ARP欺骗实战
 网络拓扑：  
-web服务器 192.168.1.10 :00:0c:29:12:c4:1e
+web服务器 192.168.1.10 00:0c:29:12:c4:1e
 受害者电脑 192.168.1.20 00:0c:29:8f:b6:a5
 攻击者电脑 192.168.1.86 00:0c:29:ec:2e:d5  
 
@@ -129,5 +138,5 @@ except KeyboardInterrupt:
 
 ```
 
-## ICMP交换机泛洪
+
 
