@@ -11,26 +11,27 @@
 
 ## 目录
 * [Linux 服务](#Linux-服务)
-	* [openssh-server](#openssh-server)
-	* [vsftpd](#vsftpd)
-	* [Apache2](#Apache2)
-	* [samba](#samba)
-	* [rexec rlogin rsh](#rexec-rlogin-rsh)
-	* [NFS(Network FIle System)](#nfsnetwork-file-system)
-	* [Java RMI Registry](#Java-RMI-Registry)
-	* [ingreslock](#ingreslock)
-	* [distccd](#distccd)
-	* [VNC](#VNC)
-	* [UnrealRCD IRC](#UnrealRCD-IRC)
-	* [MySQL-server](#MySQL-server)
+  * [openssh-server](#openssh-server)
+  * [vsftpd](#vsftpd)
+  * [Apache2](#Apache2)
+  * [samba](#samba)
+  * [rexec rlogin rsh](#rexec-rlogin-rsh)
+  * [NFS(Network FIle System)](#nfsnetwork-file-system)
+  * [Java RMI Registry](#Java-RMI-Registry)
+  * [ingreslock](#ingreslock)
+  * [distccd](#distccd)
+  * [VNC](#VNC)
+  * [UnrealRCD IRC](#UnrealRCD-IRC)
+  * [MySQL-server](#MySQL-server)
 * [Linux 杂项](#Linux-杂项)
-	* [iptables使用](#iptables使用)
-	* [进入单用户模式](#进入单用户模式)
-	* [PHP](#PHP)
-	* [利用john爆破linux系统密码](#利用john爆破linux系统密码)
-	* [密码字典](#密码字典)
-	* [破解加密的zip文件](#破解加密的zip文件)
-	* [密码复杂度设定](#密码复杂度设定)
+  * [iptables使用](#iptables使用)
+  * [进入单用户模式](#进入单用户模式)
+  * [PHP](#PHP)
+  * [利用john爆破linux系统密码](#利用john爆破linux系统密码)
+  * [密码字典](#密码字典)
+  * [破解加密的zip文件](#破解加密的zip文件)
+  * [密码复杂度设定](#密码复杂度设定)
+  * [利用hashcat爆破hash数据摘要](#利用hashcat爆破hash数据摘要)
 ___
 
 ## Linux 服务
@@ -545,7 +546,7 @@ $ mysql -h 主机 -u 用户名 [-p]
 
 ### iptables使用
 
-![](/workspace/code/markdown/notes/%E7%9C%81%E8%B5%9B/%E7%9F%A5%E8%AF%86%E5%82%A8%E5%A4%87/imgs/iptables_usage.png)
+![](imgs/iptables_usage.png)
 
 ```
 禁止meterpreter连接（原理是meterpreter的reverse shell默认监听端口是4444）
@@ -670,4 +671,76 @@ password required pam_cracklib.so retry=3 minlen=6 difok=3
 ```
 
 
+
+### 利用hashcat爆破hash数据摘要
+
+#### 爆破sha1数据摘要
+
+```shell
+$ cat hashes.txt #hashlib.sha1("p@ssword".encode("ascii")).hexdigest()
+36e618512a68721f032470bb0891adef3362cfa9
+```
+
+```powershell
+PS> hashcat -m 100 hashes.txt .\wordlist\rockyou.txt
+Dictionary cache hit:
+* Filename..: .\wordlist\rockyou.txt
+* Passwords.: 14344385
+* Bytes.....: 139921507
+* Keyspace..: 14344385
+
+36e618512a68721f032470bb0891adef3362cfa9:p@ssword
+
+Session..........: hashcat
+Status...........: Cracked
+Hash.Type........: SHA1
+Hash.Target......: 36e618512a68721f032470bb0891adef3362cfa9
+Time.Started.....: Tue Apr 30 08:59:37 2019 (0 secs)
+Time.Estimated...: Tue Apr 30 08:59:37 2019 (0 secs)
+Guess.Base.......: File (.\wordlist\rockyou.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#3.........: 22391.5 kH/s (1.95ms) @ Accel:1024 Loops:1 Thr:64 Vec:1
+Recovered........: 1/1 (100.00%) Digests, 1/1 (100.00%) Salts
+Progress.........: 393216/14344385 (2.74%)
+Rejected.........: 0/393216 (0.00%)
+Restore.Point....: 0/14344385 (0.00%)
+Restore.Sub.#3...: Salt:0 Amplifier:0-1 Iteration:0-1
+Candidates.#3....: 123456 -> remmers
+Hardware.Mon.#3..: Temp: 38c Util: 23% Core:1607MHz Mem:3504MHz Bus:8
+```
+
+#### 爆破md5数据摘要
+
+```shell
+$ cat hashes.txt #hashlib.md5("lovelive".encode("ascii")).hexdigest()
+73c329cc190a031bf64c85c580360e4c
+```
+
+```powershell
+PS> hashcat -m 0 hashes.txt .\wordlist\rockyou.txt
+Dictionary cache hit:
+* Filename..: .\wordlist\rockyou.txt
+* Passwords.: 14344385
+* Bytes.....: 139921507
+* Keyspace..: 14344385
+
+73c329cc190a031bf64c85c580360e4c:lovelive
+
+Session..........: hashcat
+Status...........: Cracked
+Hash.Type........: MD5
+Hash.Target......: 73c329cc190a031bf64c85c580360e4c
+Time.Started.....: Tue Apr 30 09:03:05 2019 (1 sec)
+Time.Estimated...: Tue Apr 30 09:03:06 2019 (0 secs)
+Guess.Base.......: File (.\wordlist\rockyou.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#3.........: 22099.4 kH/s (2.14ms) @ Accel:1024 Loops:1 Thr:64 Vec:1
+Recovered........: 1/1 (100.00%) Digests, 1/1 (100.00%) Salts
+Progress.........: 393216/14344385 (2.74%)
+Rejected.........: 0/393216 (0.00%)
+Restore.Point....: 0/14344385 (0.00%)
+Restore.Sub.#3...: Salt:0 Amplifier:0-1 Iteration:0-1
+Candidates.#3....: 123456 -> remmers
+Hardware.Mon.#3..: Temp: 37c Util:  6% Core:1645MHz Mem:3504MHz Bus:8
+```
 
