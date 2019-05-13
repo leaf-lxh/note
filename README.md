@@ -1,11 +1,24 @@
-my notes writed in markdown
+**我的笔记**
 
 ```
-repo init:
-echo "# note" >> README.md
-git init
-git add README.md
-git commit -m "first commit"
-git remote add origin https://github.com/leaf-lxh/note.git
-git push -u origin master
+.
+├── ctf_writeup
+│   ├── DDCTF2019
+│   └── ISCC2019
+├── data_structure
+├── national
+│   ├── misc
+│   ├── protocol
+│   ├── pwn
+│   ├── reverse
+│   ├── web
+│   └── Windows server
+├── nginx
+├── security
+│   └── crypto
+└── 省赛
+    ├── backdoor
+    ├── 知识储备
+    └── 脚本
 ```
+

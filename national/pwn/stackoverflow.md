@@ -26,9 +26,9 @@
 
 曾经测试过在gdb 8下也能够正常运行pwndbg, 所以你也可以尝试用其他版本的gdb...请自行测试
 
-从源码安装需要注意，要把你的python可执行文件的位置传给配置文件（下面的第四条命令, 我的python版本是3.5）
+从源码安装需要注意，要把你的python可执行文件的位置传给配置文件（下面的第四条命令, 我的python版本是3.5）因为下面的两个插件都需要使用到python。
 
-因为下面的两个插件都需要使用到python。我这里用的是python3.5, 没有尝试使用python2
+我这里用的是python3.5, 没有尝试使用python2
 
 \`which python3.5\` ==> /usr/bin/python3.5
 
@@ -87,7 +87,7 @@ $gem install one_gadget
 
 
 
-### 总结
+### 
 
 
 
