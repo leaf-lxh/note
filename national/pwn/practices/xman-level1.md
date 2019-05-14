@@ -29,7 +29,7 @@ $ checksec level1.80eacdcd51aca92af7749d96efad7fb5
 
 由于只知道比赛给了gdb，所以接下来只拿gdb和其他的工具（安装gdb时同时会安装的工具）进行分析
 
-**首先查看栈是否可写**
+**首先查看栈是否可执行**
 
 ```shell
 $ readelf -e level1.80eacdcd51aca92af7749d96efad7fb5 | grep GNU_STACK
@@ -207,7 +207,7 @@ int 0x80
 
 首先32位系统一次只能向栈上push 4个字节的数据，所以是一次push四个字符。
 
-又因为这个程序在开头的checksec中发现是`i386-32-little`，即**小端序**，所以计算机读取数据从高地址处开始读，所以需要把字符串数据倒着的形式压入栈中。（readelf -h 同样可以查看字节序）
+又因为这个程序在开头的checksec中发现是`i386-32-little`，即**小端序**，所以计算机读取数据从高地址处开始读，同时向栈上存储数据是向高地址增长的，所以需要把字符串数据倒着的形式压入栈中。（readelf -h 同样可以查看字节序）
 
 另外你会发现我在前面多加了一个斜线`/`，是因为要保证一次有四个字节。如果不是四个字节的话编译器会自动补充\x00，从而导致机器码中有\x00。在read函数读取数据时，遇到\x00会停止继续读取。
 
@@ -313,7 +313,7 @@ int main()
 
 ### 编写攻击程序
 
-直接上程序了
+直接上源码了
 
 ```c
 //exp.c
@@ -376,7 +376,7 @@ int SendPayload(char* payload, int length)
 	fflush(stdout);
 
 	free(buffer);
-
+	free(pstack);
 	close(socketfd);
 	
 	return 0;
