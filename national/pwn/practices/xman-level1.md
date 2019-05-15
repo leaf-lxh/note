@@ -463,8 +463,6 @@ ret code: 0
 CTF{xxxxxxxxxxxxxxxxxxxxxxxxxxx}
 ```
 
-过后更新带交互shell的版本
-
 ### 引用
 
 1. Linux系统调用详解 https://blog.csdn.net/gatieme/article/details/50779184
