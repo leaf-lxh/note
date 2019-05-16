@@ -272,14 +272,14 @@ except KeyboardInterrupt:
 
 这种栈溢出技术叫做[**ROP（Return-oriented_programming）**](https://en.wikipedia.org/wiki/Return-oriented_programming)，即**返回指向编程**
 
-这道题我们拿到的system函数地址实际上是plt上的地址，像这种返回到plt上的攻击技术叫做ret to plt
+这道题我们拿到的system函数地址实际上是plt上的地址，像这种返回到plt上的攻击技术叫做 `ret to plt`
 
-当然又因为system是libc提供的函数，所以也可称为ret to libc
+当然又因为system是libc提供的函数，所以也可称为`ret to libc`
 
 
 
-关于ROP技术，想了解更多的利用方法，可以查看一下的文章
+关于ROP技术，想了解更多的利用方法，可以查看以下的文章
 
-基本ROPhttps://ctf-wiki.github.io/ctf-wiki/pwn/linux/stackoverflow/basic-rop/#ret2libc
+基本ROP <https://ctf-wiki.github.io/ctf-wiki/pwn/linux/stackoverflow/basic-rop/#ret2libc>
 
-深入了解GOT,PLT和动态链接https://www.cnblogs.com/pannengzhi/p/2018-04-09-about-got-plt.html
+深入了解GOT,PLT和动态链接 <https://www.cnblogs.com/pannengzhi/p/2018-04-09-about-got-plt.html>
