@@ -116,7 +116,7 @@ End of assembler dump.
 
 首先需要一个传递给system函数的字符串，也就是要执行的系统命令。
 
-最好能直接执行/bin/sh，/bin/bash等shell命令解释器，而且程序自带这个字符串
+最好能直接执行/bin/sh，/bin/bash等shell命令解释器，而且最好程序自带这个字符串
 
 strings命令搜索字符串
 
