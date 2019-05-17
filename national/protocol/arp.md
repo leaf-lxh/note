@@ -2,7 +2,7 @@
 
 
 
-本篇笔记是对省赛中scapy.md的补充说明，另外针对国赛使用的环境，使用python3
+本篇笔记是对省赛的笔记[scapy.md](<https://github.com/leaf-lxh/note/blob/master/%E7%9C%81%E8%B5%9B/%E7%9F%A5%E8%AF%86%E5%82%A8%E5%A4%87/scapy.md>)的补充说明，另外针对国赛使用的环境，使用python3
 
 
 
