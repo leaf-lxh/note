@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 #coding: utf8
 import argparse #replacement for optparse after python3.2
-import nmap
+import scapy
 
 usage = """
         lxh port scanner.
@@ -12,14 +12,8 @@ usage = """
 def DoScan(target):
     """
     Scan host
-    retn: {"uphost1": [(open_port1, state)], "uphost2": [(open_port1,state)]}
+    retn: {"uphost1": [open_port1], "uphost2": [open_port2]}
     """
-    scanner = nmap.PortScanner()
-    report = scanner.scan(target.keys()[0], ",".join(target.values()[0]), arguments="")
-    
-    result = {}
-    for host in report["scan"]:
-        result[host] = [(port, report["scan"][host]["tcp"][port]["state"]) for port in report["scan"][host]["tcp"].keys()]
 
     return result
 
