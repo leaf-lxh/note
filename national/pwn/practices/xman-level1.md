@@ -8,7 +8,8 @@
 
 ```shell
 $ file level1.80eacdcd51aca92af7749d96efad7fb5
-level1.80eacdcd51aca92af7749d96efad7fb5: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked, interpreter /lib/ld-, for GNU/Linux 2.6.32, BuildID[sha1]=7d479bd8046d018bbb3829ab97f6196c0238b344, not stripped
+level1.80eacdcd51aca92af7749d96efad7fb5: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked, interpreter /lib/ld-, for GNU/Linux 2.6.32, BuildID[sha1]=7d479bd8046d018bbb3829ab97f6196c0238b344
+, not stripped
 ```
 
 32bit的程序。
@@ -74,9 +75,9 @@ $ readelf -s level1.80eacdcd51aca92af7749d96efad7fb5 | grep FUNC
 (gdb) set disassembly-flavor intel     //设置汇编语句样式，默认为AT&T
 (gdb) disass main
 Dump of assembler code for function main:
-   0x080484b7 <+0>:		lea    ecx,[esp+0x4]
-   0x080484bb <+4>:		and    esp,0xfffffff0
-   0x080484be <+7>:		push   DWORD PTR [ecx-0x4]
+   0x080484b7 <+0>:	lea    ecx,[esp+0x4]
+   0x080484bb <+4>:	and    esp,0xfffffff0
+   0x080484be <+7>:	push   DWORD PTR [ecx-0x4]
    0x080484c1 <+10>:	push   ebp
    0x080484c2 <+11>:	mov    ebp,esp
    0x080484c4 <+13>:	push   ecx
@@ -105,10 +106,10 @@ End of assembler dump.
 ```assembly
 (gdb) disass vulnerable_function 
 Dump of assembler code for function vulnerable_function:
-   0x0804847b <+0>:		push   ebp
-   0x0804847c <+1>:		mov    ebp,esp
-   0x0804847e <+3>:		sub    esp,0x88
-   0x08048484 <+9>:		sub    esp,0x8
+   0x0804847b <+0>:	push   ebp
+   0x0804847c <+1>:	mov    ebp,esp
+   0x0804847e <+3>:	sub    esp,0x88
+   0x08048484 <+9>:	sub    esp,0x8
    0x08048487 <+12>:	lea    eax,[ebp-0x88]
    0x0804848d <+18>:	push   eax
    0x0804848e <+19>:	push   0x8048570
@@ -156,7 +157,7 @@ End of assembler dump.
 
 接下来说一下如何调用execve函数
 
-首先是调用号，一般可以在系统的`/usr/include/x86_64-linux-gnu/asm/`目录下，有一个unistd*.h文件
+首先是调用号，一般可以在系统的`/usr/include/x86_64-linux-gnu/asm/`目录下可以找到，有一个unistd*.h文件
 
 我这里的文件是unistd_32.h
 
@@ -246,7 +247,9 @@ int main()
 }
 ```
 
-gcc编译（这里用kali里带的gcc进行编译，ubuntu16 18会提示缺32位的东西）
+gcc编译
+
+（64位系统会提示缺32位的东西，需要安装32位的支持库`sudo apt-get install gcc-multilib`）
 
 ```shell
 $ gcc -m32 -masm=intel shellcode.c
@@ -474,3 +477,4 @@ CTF{xxxxxxxxxxxxxxxxxxxxxxxxxxx}
 2. gcc使用intel格式内联汇编 https://stackoverflow.com/questions/199966/how-do-you-use-gcc-to-generate-assembly-code-in-intel-syntax
 3. 理解字节序 http://www.ruanyifeng.com/blog/2016/11/byte-order.html
 
+4. 64位Linux下编译32位程序 <https://www.jianshu.com/p/293f38918b96>
