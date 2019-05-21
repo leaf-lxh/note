@@ -84,8 +84,40 @@ if __name__ == "__main__":
 
 使用python调用scapy库进行端口扫描
 
+```python
+def DoScan(target, SYN=False, FIN=False):
+    """
+    Scan host
+    retn: {"uphost1": [(open_port1, state)], "uphost2": [(open_port1,state)]}
+    """
+    result = {}
+    for host in target:
+        result[host]=[]
+        for port in target[host]:
+            ret = None
+            if SYN == True:
+                ret = sr1(IP(dst=host)/TCP(dport=int(port), flags="S"), timeout=5, verbose=0)
+            elif FIN == True:
+                ret = sr1(IP(dst=host)/TCP(dport=int(port), flags="F"), timeout=5, verbose=0)
+            else:
+                ret = sr1(IP(dst=host)/TCP(dport=int(port)), timeout=5, verbose=0)
+
+            if ret != None:
+                if ret.getlayer(TCP).__str__() !=  'RA':
+                    result[host].append((port, "open"))
+                    continue
+            result[host].append((port, "closed"))
+
+    return result
+
+```
+
 
 
 ### hard way
 
- 直接用套接字API
+用raw socket实现
+
+
+
+emmmm以后有空再写
