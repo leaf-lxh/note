@@ -1,7 +1,10 @@
 #!/usr/bin/python3
 #coding: utf8
 import argparse #replacement for optparse after python3.2
-import scapy
+from scapy.all import *
+import logging
+
+logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
 usage = """
         lxh port scanner.
@@ -9,11 +12,28 @@ usage = """
         scan one host: scan_tool.py --host 127.0.0.1 --port 22 33 44 55
         scan multiple hosts: scan_tool.py --host 192.168.247.1-254 --port 22-50
         """
-def DoScan(target, SYN=false, FIN=false):
+def DoScan(target, SYN=False, FIN=False):
     """
     Scan host
     retn: {"uphost1": [(open_port1, state)], "uphost2": [(open_port1,state)]}
     """
+    result = {}
+    for host in target:
+        result[host]=[]
+        for port in target[host]:
+            ret = None
+            if SYN == True:
+                ret = sr1(IP(dst=host)/TCP(dport=int(port), flags="S"), timeout=5, verbose=0)
+            elif FIN == True:
+                ret = sr1(IP(dst=host)/TCP(dport=int(port), flags="F"), timeout=5, verbose=0)
+            else:
+                ret = sr1(IP(dst=host)/TCP(dport=int(port)), timeout=5, verbose=0)
+            
+            if ret != None:
+                if ret.getlayer(TCP).__str__() !=  'RA':
+                    result[host].append((port, "open"))
+                    continue
+            result[host].append((port, "closed"))
     
     return result
 
