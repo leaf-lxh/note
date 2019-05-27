@@ -4,7 +4,7 @@
 
 ### Linux提权
 
-- [x] [metasploit table2 内核漏洞提权](./national/Linux提权/metasploit_table2.md)
+- [x] [metasploit table2 内核漏洞提权](./Linux提权/metasploit_table2.md)
 - [ ] MySQL UDF提权
 
 ### Windows提权
@@ -18,12 +18,12 @@
 
 ### Linux pwn
 
-- [x] [Linux shellcode编写（gdb，readelf，objdump的使用）](./national/pwn/practices/xman-level1.md)
-- [x] [Linux elf文件判断开启的保护措施](./national/pwn/checksec.md)
+- [x] [Linux shellcode编写（gdb，readelf，objdump的使用）](./pwn/practices/xman-level1.md)
+- [x] [Linux elf文件判断开启的保护措施](./pwn/checksec.md)
 - [x] NX 绕过： ROP技术：ret2text/ret2plt/ret2libc/ret2dl-resolve
-- [x] [格式化字符串漏洞利用](./national/pwn/practice/cgfsb.md)
+- [x] [格式化字符串漏洞利用](./pwn/practice/cgfsb.md)
 - [x] PIE绕过
-- [x] Stack Canary绕过：[SSP](./national/pwn/practice/smashes.md)，劫持chk_fail函数
+- [x] Stack Canary绕过：[SSP](./pwn/practice/smashes.md)，劫持chk_fail函数
 - [x] fastbin attack，UAF
 - [ ] unlink
 - [ ] off one byte
@@ -40,8 +40,8 @@
 
 ### 其他
 
-- [x] [python端口扫描的三种方法实现：nmap，scapy，socket](./national/protocol/port_scan.md)
-- [x] [python 使用scapy模块对arp协议进行利用](./national/protocol/arp.md)
+- [x] [python端口扫描的三种方法实现：nmap，scapy，socket](./protocol/port_scan.md)
+- [x] [python 使用scapy模块对arp协议进行利用](./protocol/arp.md)
 - [x] python，c语言的socket编程
 - [x] python argparse/optparse模块的使用
 - [ ] 复习PHP常见漏洞
