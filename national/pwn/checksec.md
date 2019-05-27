@@ -115,3 +115,8 @@ Linux下的ASLR总共有3个级别，0、1、2
 在栈上的返回地址的前面放置一个cookie，在结束函数执行时，会检测此cookie，如果cookie值被篡改则直接报错，使得栈溢出无法修改cookie后面的内容。
 
 通过查看汇编代码，如果函数的开头将fs:0x28的值放置到栈返回地址的前面，则开启了stack canary
+
+
+
+### RELRO（relocation-read-only）
+
