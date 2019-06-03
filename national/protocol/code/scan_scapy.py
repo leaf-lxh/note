@@ -12,7 +12,7 @@ usage = """
         scan one host: scan_tool.py --host 127.0.0.1 --port 22 33 44 55
         scan multiple hosts: scan_tool.py --host 192.168.247.1-254 --port 22-50
         """
-def DoScan(target, SYN=False, FIN=False):
+def DoScan(target, SYN=False, FIN=True):
     """
     Scan host
     retn: {"uphost1": [(open_port1, state)], "uphost2": [(open_port1,state)]}
