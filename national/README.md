@@ -26,8 +26,7 @@
 - [x] PIE绕过
 - [x] Stack Canary绕过：[SSP](./pwn/practice/smashes.md)，劫持chk_fail函数
 - [x] fastbin attack，UAF
-- [x] unlink
-- [ ] off one byte + unlink
+- [x] off one byte + unlink
 - [ ] large bin attack
 - [ ] house of 系列堆溢出利用
 
@@ -45,7 +44,7 @@
 - [x] [python 使用scapy模块对arp协议进行利用](./protocol/arp.md)
 - [x] python，c语言的socket编程
 - [x] python argparse/optparse模块的使用
-- [ ] [netcat基本使用](./pwn/netcat使用.md)
+- [x] [netcat基本使用](./pwn/netcat使用.md)
 - [ ] 复习PHP常见漏洞
 - [ ] 复习mysql注入
 - [ ] mssql注入
@@ -62,4 +61,4 @@
 - [ ] Linux shellcode, Windows 硬编码shellcode再写几遍
 - [ ] Windows ROP尝试做一下，云服务的题至少做一道，egg定位shellcode的原理搞懂
 - [ ] 图片隐写，PHP复习，mysql从注入到getshell
-- [ ] 由于三阶段的不可靠性，搭建mssql环境练习注入，熟悉Windows server加固
+- [ ] ~~由于三阶段的不可靠性，搭建mssql环境练习注入，熟悉Windows server加固~~
