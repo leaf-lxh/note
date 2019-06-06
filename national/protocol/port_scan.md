@@ -50,7 +50,7 @@ def GetOption():
     """
     parser = argparse.ArgumentParser(description=usage)
     parser.add_argument("--host", nargs=1, dest="host", type=str, help="The host to be scaned. "
-                        "If you want to scan multi-hosts, the format should like xx.xx.xx.1-254"
+                        "unsupport multiple host"
                        )
     parser.add_argument("--ports", nargs="+", dest="ports", type=str, help="The port to be scaned."
                         "Each port should be splited by a space ( )."
