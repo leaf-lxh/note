@@ -1,4 +1,4 @@
-# 知识点
+知识点
 
 2019-5-27
 
@@ -61,4 +61,3 @@
 - [ ] Linux shellcode, Windows 硬编码shellcode再写几遍
 - [ ] Windows ROP尝试做一下，云服务的题至少做一道，egg定位shellcode的原理搞懂
 - [ ] 图片隐写，PHP复习，mysql从注入到getshell
-- [ ] ~~由于三阶段的不可靠性，搭建mssql环境练习注入，熟悉Windows server加固~~
