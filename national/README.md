@@ -20,7 +20,7 @@
 
 - [x] [Linux shellcode编写（gdb，readelf，objdump的使用）](./pwn/practices/xman-level1.md)
 - [x] [Linux elf文件判断开启的保护措施](./pwn/checksec.md)
-- [x] NX 绕过： ROP技术：ret2text/ret2plt/ret2libc/ret2dl-resolve
+- [x] NX 绕过： ROP技术：ret2text/ret2plt/ret2libc/ret2dl-resolve/[ret2syscall](#practices/ret2syscall.md)
 - [ ] 系统调用
 - [x] [格式化字符串漏洞利用](./pwn/practice/cgfsb.md)
 - [x] PIE绕过
@@ -34,7 +34,9 @@
 
 - [x] [Windows  硬编码shellcode](./pwn/windows_shellcode.md)
 - [x] [利用PEB获取模块地址，实现与Windows版本无关的shellcode](./pwn/windows_shellcode.md)
+- [ ] ~~windbg~~
 - [ ] freefloat ftpserver实战
+- [ ] ~~栈溢出覆盖SEH链~~
 - [x] [CloudMe 从POC到EXP](./pwn/practices/cloudme.md)
 - [ ] Windows常见反调试绕过
 
@@ -59,5 +61,5 @@
 
 - [ ] 端口扫描，ARP利用的脚本多熟悉几遍
 - [ ] Linux shellcode, Windows 硬编码shellcode再写几遍
-- [ ] Windows ROP尝试做一下，云服务的题至少做一道，egg定位shellcode的原理搞懂
+- [ ] Windows ROP尝试做一下，云服务的题至少做一道
 - [ ] 图片隐写，PHP复习，mysql从注入到getshell

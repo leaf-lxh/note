@@ -23,11 +23,13 @@ C:\Users\leaf>netstat -ano
 
 ### 漏洞利用
 
-测试环境为 Windows 7 SP1 x64，关闭了ASLR
+测试环境为 Windows 7 SP1 x64，关闭了ASLR和DEP
 
 经过测试程序的栈上数据可以执行，于是考虑写入shellcode，通过跳转进行恶意代码的执行
 
 此处使用的shellcode能自动定位WinExec函数在内存中的位置，详情见[跨Windows版本的shellcode](../windows_shellcode.md)
+
+poc:
 
 ```python
 #python3
@@ -48,6 +50,12 @@ trigger(1048)
 ```
 
 代码执行后服务崩溃，并会弹出一个计算器
+
+
+
+### DEP与EXP
+
+为了增加难度，开启了DEP
 
 
 
